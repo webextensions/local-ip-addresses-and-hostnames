@@ -1,0 +1,37 @@
+{
+  "name": "local-ip-addresses-and-hostnames",
+  "version": "0.0.0",
+  "description": "Get local IP addresses and hostnames",
+  "main": "local-ip-addresses-and-hostnames.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webextensions/local-ip-addresses-and-hostnames.git"
+  },
+  "keywords": [
+    "local",
+    "IP",
+    "address",
+    "addresses",
+    "host",
+    "hosts",
+    "name",
+    "names",
+    "hostname",
+    "hostnames",
+    "etc",
+    "etc/hosts",
+    "/etc/hosts"
+  ],
+  "author": "Priyank Parashar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/webextensions/local-ip-addresses-and-hostnames/issues"
+  },
+  "homepage": "https://github.com/webextensions/local-ip-addresses-and-hostnames#readme",
+  "dependencies": {
+    "parse-hosts": "1.0.1"
+  }
+}

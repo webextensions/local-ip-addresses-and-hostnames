@@ -31,7 +31,7 @@ var getLocalIpAddresses = function () {
 };
 
 var getLocalHostnames = function (localIpAddresses) {
-    var parseHosts = require('parse-hosts');
+    var parseHosts = require('@webextensions/parse-hosts');
 
     var localIpAddresses = localIpAddresses || getLocalIpAddresses();
 

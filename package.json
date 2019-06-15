@@ -1,6 +1,6 @@
 {
   "name": "local-ip-addresses-and-hostnames",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Get local IP addresses and hostnames",
   "main": "local-ip-addresses-and-hostnames.js",
   "scripts": {

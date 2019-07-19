@@ -32,6 +32,6 @@
   },
   "homepage": "https://github.com/webextensions/local-ip-addresses-and-hostnames#readme",
   "dependencies": {
-    "@webextensions/parse-hosts": "1.0.2"
+    "@webextensions/parse-hosts": "1.0.3"
   }
 }

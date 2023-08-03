@@ -1,12 +1,10 @@
 {
     "name": "local-ip-addresses-and-hostnames",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "description": "Get local IP addresses and hostnames",
-
     "engines": {
         "node": ">=16"
     },
-
     "main": "local-ip-addresses-and-hostnames.js",
     "scripts": {
         "test": "echo \"Error: no test specified\""

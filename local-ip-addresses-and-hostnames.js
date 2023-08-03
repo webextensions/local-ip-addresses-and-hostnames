@@ -3,10 +3,35 @@
 /*eslint-env node*/
 'use strict';
 
-// https://stackoverflow.com/questions/1960473/get-all-unique-values-in-an-array-remove-duplicates/14438954#14438954
-var onlyUnique = function (value, index, self) {
-    return self.indexOf(value) === index;
-}
+const matchesPopularPath = function (path) {
+    if (
+        path === 'localhost' ||
+        path === '127.0.0.1' ||
+        path.startsWith('192.168.')
+    ) {
+        return true;
+    } else {
+        return false;
+    }
+};
+
+const sortWithPopularPathsFirst = function (a, b) {
+    if (matchesPopularPath(a)) {
+        if (!matchesPopularPath(b)) {
+            return -1;
+        }
+    } else if (matchesPopularPath(b)) {
+        return 1;
+    }
+
+    if (a < b) {
+        return -1;
+    } else if (a > b) {
+        return 1;
+    } else {
+        return 0;
+    }
+};
 
 var getLocalIpAddresses = function () {
     // Reference: http://stackoverflow.com/questions/3653065/get-local-ip-address-in-node-js/8440736#8440736
@@ -25,8 +50,8 @@ var getLocalIpAddresses = function () {
         });
     });
 
-    localIpAddresses.sort();
-    localIpAddresses = localIpAddresses.filter(onlyUnique);
+    localIpAddresses = [...new Set(localIpAddresses)];
+    localIpAddresses.sort(sortWithPopularPathsFirst);
     return localIpAddresses;
 };
 
@@ -60,8 +85,8 @@ var getLocalHostnames = function (localIpAddresses) {
         return localHostnames;
     }(ipAddressesToHostsMap));
 
-    localHostnames.sort();
-    localHostnames = localHostnames.filter(onlyUnique);
+    localHostnames = [...new Set(localHostnames)];
+    localHostnames.sort(sortWithPopularPathsFirst);
     return localHostnames;
 };
 
@@ -70,12 +95,17 @@ var getLocalIpAddressesAndHostnames = function () {
         localHostnames = getLocalHostnames(localIpAddresses),
         localIpAddressesAndHostnames = localIpAddresses.concat(localHostnames);
 
-    localIpAddressesAndHostnames.sort();
-    localIpAddressesAndHostnames = localIpAddressesAndHostnames.filter(onlyUnique);
+    localIpAddressesAndHostnames = [...new Set(localIpAddressesAndHostnames)];
+    localIpAddressesAndHostnames.sort(sortWithPopularPathsFirst);
     return localIpAddressesAndHostnames;
 };
 
-if (!module.parent) {
+if (
+    module.parent || // It has been loaded via `require()` syntax
+    (!module.parent && typeof require == 'function' && !require.main) // It has been loaded via `import` syntax
+) {
+    // do nothing
+} else { // It has been loaded via `node` command
     console.log('Local IP addresses: ', JSON.stringify(getLocalIpAddresses(), null, '    '));
     console.log('\nLocal hostnames: ', JSON.stringify(getLocalHostnames(), null, '    '));
     console.log('\nLocal IP addresses and hostnames: ', JSON.stringify(getLocalIpAddressesAndHostnames(), null, '    '));
@@ -88,6 +118,6 @@ module.exports = {
 };
 
 // Examples:
-//     getLocalIpAddresses() = ['10.0.0.101', '127.0.0.1', '192.168.1.101']
-//     getLocalHostnames() = ['example.com', 'localhost']
-//     getLocalIpAddressesAndHostnames() = ['10.0.0.101', '127.0.0.1', '192.168.1.101', 'example.com', 'localhost']
+//     getLocalIpAddresses() = ['127.0.0.1', '192.168.1.101', '10.0.0.101']
+//     getLocalHostnames() = ['localhost', 'example.com']
+//     getLocalIpAddressesAndHostnames() = ['127.0.0.1', '192.168.1.101', 'localhost', '10.0.0.101', 'example.com']

@@ -15,6 +15,21 @@ const matchesPopularPath = function (path) {
     }
 };
 
+var ensurePreferredEntriesAtTop = function (entriesInput, preferredEntriesInput) {
+    let entries = [...entriesInput];
+    let preferredEntries = [...preferredEntriesInput];
+
+    preferredEntries = preferredEntries.filter(function (preferredEntry) {
+        return entries.includes(preferredEntry);
+    });
+    entries = entries.filter(function (entry) {
+        return !(preferredEntries.includes(entry));
+    });
+    entries = preferredEntries.concat(entries);
+
+    return entries;
+};
+
 const sortWithPopularPathsFirst = function (a, b) {
     if (matchesPopularPath(a)) {
         if (!matchesPopularPath(b)) {
@@ -33,9 +48,11 @@ const sortWithPopularPathsFirst = function (a, b) {
     }
 };
 
-var getLocalIpAddresses = function () {
+var getLocalIpAddresses = function (options = {}) {
     // Reference: http://stackoverflow.com/questions/3653065/get-local-ip-address-in-node-js/8440736#8440736
     var os = require('os');
+
+    var preferredEntries = options.preferredEntries || ['127.0.0.1'];
 
     var localIpAddresses = [];
 
@@ -52,12 +69,17 @@ var getLocalIpAddresses = function () {
 
     localIpAddresses = [...new Set(localIpAddresses)];
     localIpAddresses.sort(sortWithPopularPathsFirst);
+    localIpAddresses = ensurePreferredEntriesAtTop(localIpAddresses, preferredEntries);
+
     return localIpAddresses;
 };
 
-var getLocalHostnames = function (localIpAddresses) {
+var getLocalHostnames = function (options = {}) {
     var parseHosts = require('@webextensions/parse-hosts');
 
+    var preferredEntries = options.preferredEntries || ['localhost', 'example.com'];
+
+    var localIpAddresses = options.localIpAddresses || getLocalIpAddresses();
     var localIpAddresses = localIpAddresses || getLocalIpAddresses();
 
     var ipAddressesToHostsMap = {};
@@ -87,16 +109,22 @@ var getLocalHostnames = function (localIpAddresses) {
 
     localHostnames = [...new Set(localHostnames)];
     localHostnames.sort(sortWithPopularPathsFirst);
+    localHostnames = ensurePreferredEntriesAtTop(localHostnames, preferredEntries);
+
     return localHostnames;
 };
 
-var getLocalIpAddressesAndHostnames = function () {
+var getLocalIpAddressesAndHostnames = function (options = {}) {
     var localIpAddresses = getLocalIpAddresses(),
-        localHostnames = getLocalHostnames(localIpAddresses),
+        localHostnames = getLocalHostnames({ localIpAddresses }),
         localIpAddressesAndHostnames = localIpAddresses.concat(localHostnames);
+
+    var preferredEntries = options.preferredEntries || ['localhost', 'example.com'];
 
     localIpAddressesAndHostnames = [...new Set(localIpAddressesAndHostnames)];
     localIpAddressesAndHostnames.sort(sortWithPopularPathsFirst);
+    localIpAddressesAndHostnames = ensurePreferredEntriesAtTop(localIpAddressesAndHostnames, preferredEntries);
+
     return localIpAddressesAndHostnames;
 };
 

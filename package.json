@@ -3,11 +3,11 @@
     "version": "0.1.4",
     "description": "Get local IP addresses and hostnames",
     "engines": {
-        "node": ">=16"
+        "node": ">=18"
     },
     "main": "local-ip-addresses-and-hostnames.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\""
+        "test": "echo \"Warning: no test specified\""
     },
     "repository": {
         "type": "git",

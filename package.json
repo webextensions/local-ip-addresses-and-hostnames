@@ -7,7 +7,7 @@
     },
     "main": "local-ip-addresses-and-hostnames.js",
     "scripts": {
-        "test": "echo \"Warning: no test specified\""
+        "test": "vitest run"
     },
     "repository": {
         "type": "git",
@@ -36,5 +36,8 @@
     "homepage": "https://github.com/webextensions/local-ip-addresses-and-hostnames#readme",
     "dependencies": {
         "@webextensions/parse-hosts": "1.0.3"
+    },
+    "devDependencies": {
+        "vitest": "^4.1.4"
     }
 }

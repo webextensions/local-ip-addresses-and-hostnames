@@ -15,6 +15,16 @@ const matchesPopularPath = function (path) {
     }
 };
 
+// Per RFC 6761, names ending in `.localhost` resolve to the loopback
+// interface and are auto-mapped by browsers without an /etc/hosts entry.
+const isAutoResolvableLocalhost = function (entry) {
+    return (
+        typeof entry === 'string' &&
+        entry.length > '.localhost'.length &&
+        entry.toLowerCase().endsWith('.localhost')
+    );
+};
+
 var ensurePreferredEntriesAtTop = function (entriesInput, preferredEntriesInput) {
     let entries = [...entriesInput];
     let preferredEntries = [...preferredEntriesInput];
@@ -107,6 +117,10 @@ var getLocalHostnames = function (options = {}) {
         return localHostnames;
     }(ipAddressesToHostsMap));
 
+    localHostnames = localHostnames.concat(
+        preferredEntries.filter(isAutoResolvableLocalhost)
+    );
+
     localHostnames = [...new Set(localHostnames)];
     localHostnames.sort(sortWithPopularPathsFirst);
     localHostnames = ensurePreferredEntriesAtTop(localHostnames, preferredEntries);
@@ -120,6 +134,10 @@ var getLocalIpAddressesAndHostnames = function (options = {}) {
         localIpAddressesAndHostnames = localIpAddresses.concat(localHostnames);
 
     var preferredEntries = options.preferredEntries || ['localhost', 'example.com'];
+
+    localIpAddressesAndHostnames = localIpAddressesAndHostnames.concat(
+        preferredEntries.filter(isAutoResolvableLocalhost)
+    );
 
     localIpAddressesAndHostnames = [...new Set(localIpAddressesAndHostnames)];
     localIpAddressesAndHostnames.sort(sortWithPopularPathsFirst);
